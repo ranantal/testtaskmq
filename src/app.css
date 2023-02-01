@@ -9,6 +9,9 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+
+  --color-primary-7: #096dd9;
+  --color-primary-5: #40a9ff;
 }
 
 html,
