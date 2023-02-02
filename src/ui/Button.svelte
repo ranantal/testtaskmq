@@ -41,6 +41,6 @@
   }
 
   button:active {
-    transform: scale(0.95);
+    opacity: 0.8;
   }
 </style>
