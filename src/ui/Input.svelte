@@ -1,6 +1,7 @@
 <script>
   import { createEventDispatcher } from 'svelte';
   import { clickOutside } from './click-outside.js';
+  import Button from './Button.svelte';
 
   export let max = 9999;
   export let min = 0;
@@ -45,13 +46,13 @@
 
 <div class="container">
   <input on:change={onChange} value={innerValue} />
-  <button on:click={onClick}>
+  <Button on:click={onClick}>
     <svg viewBox="64 64 896 896" focusable="false" data-icon="down" width="1em" height="1em" fill="white" aria-hidden="true"
       ><path
         d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
       /></svg
     >
-  </button>
+  </Button>
 
   {#if showOptions}
     <div class="options" use:clickOutside on:click_outside={onClickOutside}>
@@ -77,26 +78,6 @@
     border-radius: 4px 0 0 4px;
 
     font-size: 14px;
-  }
-
-  button {
-    box-sizing: border-box;
-    width: 32px;
-    height: 32px;
-    border: 1px solid var(--color-primary-7);
-    border-left: none;
-
-    border-radius: 0 4px 4px 0;
-
-    background-color: var(--color-primary-7);
-
-    cursor: pointer;
-
-    transition: all 200ms ease-out;
-  }
-
-  button:active {
-    transform: scale(0.95);
   }
 
   .options {
