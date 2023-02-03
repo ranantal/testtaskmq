@@ -27,8 +27,8 @@
   const temperature = loadData(Table.Temperature, '../data/temperature.json');
   const precipitation = loadData(Table.Precipitation, '../data/precipitation.json');
 
-  let currentType = DataType.Temperature;
-  let data = temperature;
+  let currentType: DataType = DataType.Temperature;
+  let data: Promise<ItemData[]> = temperature;
 
   const range = {
     min: 1881,
@@ -58,7 +58,7 @@
 
   let setData = (type: DataType = currentType) => {
     currentType = type;
-    let source;
+    let source: Promise<ItemData[]>;
 
     if (type === DataType.Temperature) {
       source = temperature;
@@ -80,7 +80,7 @@
   <section>
     <div class="controls">
       <Button on:click={() => setData(DataType.Temperature)}>Temperature</Button>
-      <Button on:click={() => setData(DataType.Temperature)}>Precipitation</Button>
+      <Button on:click={() => setData(DataType.Precipitation)}>Precipitation</Button>
     </div>
     <div class="graph-container">
       <div class="filters">
@@ -89,13 +89,7 @@
       </div>
 
       <div class="graph">
-        {#await data}
-          <p>waiting...</p>
-        {:then res}
-          <Graph data={res} />
-        {:catch error}
-          <p style="color: red">{error.message}</p>
-        {/await}
+        <Graph {data} />
       </div>
     </div>
   </section>
@@ -130,6 +124,7 @@
   .graph-container {
     display: flex;
     flex-direction: column;
+    box-sizing: border-box;
     padding: 4px;
   }
 
@@ -139,9 +134,9 @@
 
   .graph {
     flex-grow: 1;
+    box-sizing: border-box;
     width: 100%;
-    margin-top: 4px;
-    border: 1px solid var(--color-primary-5);
+    margin-top: 12px;
     border-radius: 4px;
   }
 </style>
