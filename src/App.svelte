@@ -1,7 +1,6 @@
 <script context="module" lang="ts">
-  import { getData } from './utils';
-  import type { ItemData } from './types';
-  import { DATA_TYPES } from './types';
+  import { getData, addData, fetchData, Table } from './utils';
+  import { DataType, type ItemData } from './types';
 </script>
 
 <script lang="ts">
@@ -9,10 +8,26 @@
   import Input from './ui/Input.svelte';
   import Graph from './ui/Graph.svelte';
 
-  const temperature = getData<ItemData>('../data/temperature.json');
-  const precipitation = getData<ItemData>('../data/precipitation.json');
+  const loadData = (table: Table, url: string) =>
+    getData<ItemData>(table)
+      .then((data) => {
+        if (!data.length) {
+          return fetchData<ItemData>(url).then((fetchedData) => {
+            addData(table, fetchedData);
+            return fetchedData;
+          });
+        }
 
-  let currentType = DATA_TYPES.TEMP;
+        return data;
+      })
+      .catch((error) => {
+        return fetchData<ItemData>(url);
+      });
+
+  const temperature = loadData(Table.Temperature, '../data/temperature.json');
+  const precipitation = loadData(Table.Precipitation, '../data/precipitation.json');
+
+  let currentType = DataType.Temperature;
   let data = temperature;
 
   const range = {
@@ -41,36 +56,31 @@
     setData();
   };
 
-  let setData = (type: DATA_TYPES = currentType) => {
+  let setData = (type: DataType = currentType) => {
     currentType = type;
     let source;
 
-    if (type === DATA_TYPES.TEMP) {
+    if (type === DataType.Temperature) {
       source = temperature;
     }
-    if (type === DATA_TYPES.PREC) {
+    if (type === DataType.Precipitation) {
       source = precipitation;
     }
 
-    data = source
-      .then((values) => {
-        return values.filter(({ t }) => {
-          const year = Number(t.substring(0, 4));
-          return year >= min && year <= max;
-        });
-      })
-      .then((d) => {
-        console.log(d);
-        return d;
+    data = source.then((values) => {
+      return values.filter(({ t }) => {
+        const year = Number(t.substring(0, 4));
+        return year >= min && year <= max;
       });
+    });
   };
 </script>
 
 <main>
   <section>
     <div class="controls">
-      <Button on:click={() => setData(DATA_TYPES.TEMP)}>Temperature</Button>
-      <Button on:click={() => setData(DATA_TYPES.PREC)}>Precipitation</Button>
+      <Button on:click={() => setData(DataType.Temperature)}>Temperature</Button>
+      <Button on:click={() => setData(DataType.Temperature)}>Precipitation</Button>
     </div>
     <div class="graph-container">
       <div class="filters">

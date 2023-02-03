@@ -1,3 +1,5 @@
+import { Table } from './utils';
+
 /** one element in data */
 export type ItemData = {
   /** time */
@@ -6,7 +8,7 @@ export type ItemData = {
   v: number;
 };
 
-export enum DATA_TYPES {
-  TEMP = 'temperature',
-  PREC = 'precipitation',
+export enum DataType {
+  Temperature = Table.Temperature,
+  Precipitation = Table.Precipitation,
 }
