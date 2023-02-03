@@ -5,3 +5,8 @@ export type ItemData = {
   /** value */
   v: number;
 };
+
+export enum DATA_TYPES {
+  TEMP = 'temperature',
+  PREC = 'precipitation',
+}

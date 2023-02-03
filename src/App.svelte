@@ -1,17 +1,13 @@
 <script context="module" lang="ts">
   import { getData } from './utils';
   import type { ItemData } from './types';
+  import { DATA_TYPES } from './types';
 </script>
 
 <script lang="ts">
   import Button from './ui/Button.svelte';
   import Input from './ui/Input.svelte';
   import Graph from './ui/Graph.svelte';
-
-  const DATA_TYPES = {
-    TEMP: 'temperature',
-    PREC: 'precipitation',
-  };
 
   const temperature = getData<ItemData>('../data/temperature.json');
   const precipitation = getData<ItemData>('../data/precipitation.json');
@@ -45,7 +41,7 @@
     setData();
   };
 
-  let setData = (type = currentType) => {
+  let setData = (type: DATA_TYPES = currentType) => {
     currentType = type;
     let source;
 
