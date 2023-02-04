@@ -46,22 +46,49 @@
     const stepX = width / data.length;
     const stepY = height / (maxY - minY);
 
-    context.beginPath();
-    context.strokeStyle = '#BBB';
+    const mapX = (x: number): number => (x * (width - 50)) / width + 25;
+    const mapY = (y: number): number => height - (y * (height - 50)) / height - 25;
 
-    context.moveTo(0, height);
-    context.lineTo(0, 0);
-    context.moveTo(0, height - (0 - minY) * stepY);
-    context.lineTo(width, height - (0 - minY) * stepY);
+    context.beginPath();
+    context.strokeStyle = '#000';
+
+    context.moveTo(mapX(0), mapY(0));
+    context.lineTo(mapX(0), mapY(height));
+    context.moveTo(mapX(0), mapY((0 - minY) * stepY));
+    context.lineTo(mapX(width), mapY((0 - minY) * stepY));
 
     context.stroke();
 
-    context.beginPath();
-    context.strokeStyle = '#444';
+    const roundedMinY = Math.ceil(minY);
+    const roundedMaxY = Math.floor(maxY);
+    const ySerifStep = Math.floor((roundedMaxY - roundedMinY) / 10);
 
-    context.moveTo(0, height - (data[0].v - minY) * stepY);
+    const renderSerif = (i) => {
+      context.moveTo(mapX(-5), mapY((i - minY) * stepY));
+      context.lineTo(mapX(0), mapY((i - minY) * stepY));
+      context.fillText(`${i}`, mapX(-7), mapY((i - minY) * stepY - 4));
+      context.moveTo(mapX(0), mapY((i - minY) * stepY));
+      context.lineTo(mapX(width), mapY((i - minY) * stepY));
+    };
+
+    context.font = 'norrmal 12px Arial, sans-serif';
+    context.textAlign = 'right';
+    context.strokeStyle = '#DDD';
+    context.beginPath();
+    for (let i = 0; i < maxY; i += ySerifStep) {
+      renderSerif(i);
+    }
+    for (let i = -ySerifStep; i > minY; i -= ySerifStep) {
+      renderSerif(i);
+    }
+    context.stroke();
+
+    context.beginPath();
+    context.strokeStyle = '#096dd9';
+
+    context.moveTo(mapX(0), mapY((data[0].v - minY) * stepY));
     data.forEach((value, i) => {
-      context.lineTo(i * stepX, height - (value.v - minY) * stepY);
+      context.lineTo(mapX(i * stepX), mapY((value.v - minY) * stepY));
     });
 
     context.stroke();
