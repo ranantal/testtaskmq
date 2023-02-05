@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { ItemData } from 'src/types';
   import { onMount } from 'svelte';
+  import dateFormat from 'dateformat';
 
   export let data: Promise<ItemData[]>;
   $: {
@@ -40,9 +41,6 @@
       { minY: Infinity, maxY: -Infinity }
     );
 
-    const minX = data[0].t;
-    const maxX = data[data.length - 1].t;
-
     const stepX = width / data.length;
     const stepY = height / (maxY - minY);
 
@@ -64,11 +62,11 @@
     const ySerifStep = Math.floor((roundedMaxY - roundedMinY) / 10);
 
     const renderSerif = (i) => {
-      context.moveTo(mapX(-5), mapY((i - minY) * stepY));
-      context.lineTo(mapX(0), mapY((i - minY) * stepY));
       context.fillText(`${i}`, mapX(-7), mapY((i - minY) * stepY - 4));
-      context.moveTo(mapX(0), mapY((i - minY) * stepY));
-      context.lineTo(mapX(width), mapY((i - minY) * stepY));
+      if (i !== 0) {
+        context.moveTo(mapX(0), mapY((i - minY) * stepY));
+        context.lineTo(mapX(width), mapY((i - minY) * stepY));
+      }
     };
 
     context.font = 'norrmal 12px Arial, sans-serif';
@@ -82,6 +80,13 @@
       renderSerif(i);
     }
     context.stroke();
+
+    const xSerifStep = Math.floor(data.length / 11);
+
+    context.textAlign = 'center';
+    for (let i = 0; i < data.length; i += xSerifStep) {
+      context.fillText(dateFormat(data[i].t, 'mmm yyyy'), mapX(i * stepX), mapY(-20));
+    }
 
     context.beginPath();
     context.strokeStyle = '#096dd9';
