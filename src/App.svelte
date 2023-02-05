@@ -106,8 +106,8 @@
 
   section {
     display: flex;
-    width: 650px;
-    height: 400px;
+    width: 950px;
+    height: 600px;
   }
 
   .controls {
@@ -122,6 +122,7 @@
   }
 
   .graph-container {
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
