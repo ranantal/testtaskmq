@@ -3,9 +3,11 @@
   import { onMount } from 'svelte';
   import dateFormat from 'dateformat';
 
-  export let data: Promise<ItemData[]>;
+  export let data: ItemData[];
   $: {
-    data.then((values) => render(values));
+    if (data) {
+      render(data);
+    }
   }
 
   let canvasContainer: HTMLElement;
@@ -114,7 +116,7 @@
       context.fillText(dateFormat(data[i].t, 'mmm yyyy'), mapX(i * stepX), mapY(-20));
     }
 
-    //drawing graph
+    // drawing graph
     context.beginPath();
     context.strokeStyle = '#096dd9';
 
@@ -126,6 +128,7 @@
     context.stroke();
   };
 
+  // create tooltip when mouse moves over the graph
   let onMouseMove = async (event) => {
     const _data = await data;
     if (!_data.length) {
@@ -168,6 +171,10 @@
     tooltipsCtx.clearRect(0, 0, tooltips.width, tooltips.height);
   };
 </script>
+
+{#if !data}
+  <div>...waiting</div>
+{/if}
 
 <div bind:this={canvasContainer}>
   <canvas bind:this={canvas} on:mousemove={onMouseMove} on:mouseleave={clearTooltips} />

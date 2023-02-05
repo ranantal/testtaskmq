@@ -1,4 +1,4 @@
-import { Table } from './utils';
+import type { Table } from './utils';
 
 /** one element in data */
 export type ItemData = {
@@ -8,7 +8,7 @@ export type ItemData = {
   v: number;
 };
 
-export enum DataType {
-  Temperature = Table.Temperature,
-  Precipitation = Table.Precipitation,
+export interface DataSources {
+  [Table.Temperature]: ItemData[];
+  [Table.Precipitation]: ItemData[];
 }

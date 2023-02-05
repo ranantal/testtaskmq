@@ -1,6 +1,6 @@
 <script context="module" lang="ts">
   import { getData, addData, fetchData, Table } from './utils';
-  import { DataType, type ItemData } from './types';
+  import type { DataSources, ItemData } from './types';
 </script>
 
 <script lang="ts">
@@ -8,8 +8,30 @@
   import Input from './ui/Input.svelte';
   import Graph from './ui/Graph.svelte';
 
+  // store data in local variables to prevent multiple requests to indexedDB
+  const dataSources: DataSources = {
+    [Table.Temperature]: null,
+    [Table.Precipitation]: null,
+  };
+
+  const urls = {
+    [Table.Temperature]: '../data/temperature.json',
+    [Table.Precipitation]: '../data/precipitation.json',
+  };
+
+  let currentType: Table = Table.Temperature;
+  let data: ItemData[];
+
+  const range = {
+    min: 1881,
+    max: 2006,
+  };
+
+  let min = 1881;
+  let max = 2006;
+
   /**
-   * Checks for data in indexedDB, fetch data and add it ti indexedDB if there is no data in indexedDB
+   * Checks for data in indexedDB, fetch data and add it to indexedDB if there is no data in indexedDB
    * @param table table name in indexedDB
    * @param url url to fetch new data
    */
@@ -28,23 +50,6 @@
       .catch((error) => {
         return fetchData<ItemData>(url);
       });
-
-  /**
-   * data sources
-   */
-  const getTemperature = () => loadData(Table.Temperature, '../data/temperature.json');
-  const getPrecipitation = () => loadData(Table.Precipitation, '../data/precipitation.json');
-
-  let currentType: DataType = DataType.Temperature;
-  let data: Promise<ItemData[]> = getTemperature();
-
-  const range = {
-    min: 1881,
-    max: 2006,
-  };
-
-  let min = 1881;
-  let max = 2006;
 
   /**
    * sets filter properties
@@ -78,35 +83,31 @@
   /**
    * create data source for graph
    */
-  let setData = (type: DataType = currentType, force = false) => {
+  let setData = async (type: Table = currentType, force = false) => {
     if (type === currentType && !force) {
       return;
     }
 
     currentType = type;
-    let source: Promise<ItemData[]>;
 
-    if (type === DataType.Temperature) {
-      source = getTemperature();
-    }
-    if (type === DataType.Precipitation) {
-      source = getPrecipitation();
+    if (!dataSources[type]) {
+      dataSources[type] = await loadData(type, urls[type]);
     }
 
-    data = source.then((values) => {
-      return values.filter(({ t }) => {
-        const year = Number(t.substring(0, 4));
-        return year >= min && year <= max;
-      });
+    data = dataSources[type].filter(({ t }) => {
+      const year = Number(t.substring(0, 4));
+      return year >= min && year <= max;
     });
   };
+
+  setData(currentType, true);
 </script>
 
 <main>
   <section>
     <div class="controls">
-      <Button on:click={() => setData(DataType.Temperature)}>Temperature</Button>
-      <Button on:click={() => setData(DataType.Precipitation)}>Precipitation</Button>
+      <Button on:click={() => setData(Table.Temperature)}>Temperature</Button>
+      <Button on:click={() => setData(Table.Precipitation)}>Precipitation</Button>
     </div>
     <div class="graph-container">
       <div class="filters">
