@@ -5,9 +5,7 @@
 
   export let data: ItemData[];
   $: {
-    if (data) {
-      render(data);
-    }
+    render(data);
   }
 
   let canvasContainer: HTMLElement;
@@ -40,10 +38,12 @@
     height = canvasContainer.getBoundingClientRect().height;
     canvas.width = width;
     canvas.height = height;
+
+    render(data);
   });
 
   const render = (data: ItemData[]) => {
-    if (data.length === 0 || !canvas) {
+    if (!data || data.length === 0 || !canvas) {
       return;
     }
 
