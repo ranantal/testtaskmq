@@ -14,6 +14,8 @@
   let tooltips: HTMLCanvasElement;
   let tooltipsCtx: CanvasRenderingContext2D;
 
+  // padding for graph
+  const PADDING = 25;
   // max and min values from data
   let maxY;
   let minY;
@@ -24,8 +26,8 @@
   let stepX;
   let stepY;
   // maps painted graph relative coords to actual canvas coords
-  const mapX = (x: number): number => (x * (width - 50)) / width + 25;
-  const mapY = (y: number): number => height - (y * (height - 50)) / height - 25;
+  const mapX = (x: number): number => (x * (width - 2 * PADDING)) / width + PADDING;
+  const mapY = (y: number): number => height - (y * (height - 2 * PADDING)) / height - PADDING;
 
   onMount(() => {
     // configuring canvas
@@ -134,7 +136,7 @@
 
     // find value to show
     const valueIndex =
-      layerX >= 25 &&
+      layerX >= PADDING &&
       _data.findIndex((_, i) => {
         if (mapX(i * stepX) >= layerX && mapX((i + 1) * stepX) > layerX) {
           return true;
@@ -157,7 +159,7 @@
     tooltips.style.zIndex = '1';
     tooltips.style.opacity = '1';
     // position tooltip
-    tooltips.style.transform = `translate(${mapX(valueIndex * stepX)}px, ${mapY((value.v - minY) * stepY) - 25}px)`;
+    tooltips.style.transform = `translate(${mapX(valueIndex * stepX)}px, ${mapY((value.v - minY) * stepY) - PADDING}px)`;
   };
 
   let clearTooltips = () => {
