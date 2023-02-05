@@ -93,6 +93,7 @@
   .options {
     position: absolute;
     overflow-y: scroll;
+    z-index: 10;
 
     top: 32px;
     left: 0;
