@@ -32,11 +32,11 @@
   /**
    * data sources
    */
-  const temperature = loadData(Table.Temperature, '../data/temperature.json');
-  const precipitation = loadData(Table.Precipitation, '../data/precipitation.json');
+  const getTemperature = () => loadData(Table.Temperature, '../data/temperature.json');
+  const getPrecipitation = () => loadData(Table.Precipitation, '../data/precipitation.json');
 
   let currentType: DataType = DataType.Temperature;
-  let data: Promise<ItemData[]> = temperature;
+  let data: Promise<ItemData[]> = getTemperature();
 
   const range = {
     min: 1881,
@@ -75,10 +75,10 @@
     let source: Promise<ItemData[]>;
 
     if (type === DataType.Temperature) {
-      source = temperature;
+      source = getTemperature();
     }
     if (type === DataType.Precipitation) {
-      source = precipitation;
+      source = getPrecipitation();
     }
 
     data = source.then((values) => {
