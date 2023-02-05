@@ -184,6 +184,7 @@
     top: 0;
     left: 0;
     z-index: -1;
+    opacity: 0;
 
     background-color: white;
     border-radius: 3px;
