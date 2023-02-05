@@ -18,7 +18,10 @@ export async function fetchData<T>(url: string): Promise<T[]> {
   throw new Error();
 }
 
-const dbPromise = new Promise((res, rej) => {
+/**
+ * promise with IDBDatabase instanse
+ */
+const dbPromise = new Promise<IDBDatabase>((res, rej) => {
   if (!indexedDB) {
     const error = "Your browser doesn't support indexedDB";
     console.warn(error);
@@ -48,6 +51,11 @@ const dbPromise = new Promise((res, rej) => {
   };
 });
 
+/**
+ * Get promise with data from indexedDB table
+ * @param table table name in indexedDB
+ * @returns Promise<T>
+ */
 export function getData<T>(table: Table): Promise<T[]> {
   return dbPromise.then((db) => {
     if (!(db instanceof IDBDatabase)) {
@@ -71,7 +79,13 @@ export function getData<T>(table: Table): Promise<T[]> {
   });
 }
 
-export function addData<T>(table: Table, data: T[]) {
+/**
+ * Add data to indexedDB table
+ * @param table table name in indexedDB
+ * @param data data to add
+ * @returns void
+ */
+export function addData<T>(table: Table, data: T[]): Promise<void> {
   return dbPromise.then((db) => {
     if (!(db instanceof IDBDatabase)) {
       throw "Your browser doesn't support indexedDB";

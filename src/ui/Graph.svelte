@@ -13,6 +13,7 @@
   let context: CanvasRenderingContext2D;
 
   onMount(() => {
+    // configuring canvas
     context = canvas.getContext('2d');
 
     const { width, height } = canvasContainer.getBoundingClientRect();
@@ -25,9 +26,11 @@
       return;
     }
 
+    // clear canvas
     const { width, height } = canvas;
     context.clearRect(0, 0, canvas.width, canvas.height);
 
+    // max and min values from data
     const { maxY, minY } = data.reduce(
       (acc, val) => {
         if (val.v < acc.minY) {
@@ -41,12 +44,15 @@
       { minY: Infinity, maxY: -Infinity }
     );
 
+    // steps between values in px
     const stepX = width / data.length;
     const stepY = height / (maxY - minY);
 
+    // maps painted graph relative coords to actual canvas coords
     const mapX = (x: number): number => (x * (width - 50)) / width + 25;
     const mapY = (y: number): number => height - (y * (height - 50)) / height - 25;
 
+    // drawing axis
     context.beginPath();
     context.strokeStyle = '#000';
 
@@ -57,6 +63,7 @@
 
     context.stroke();
 
+    // drawing serifs for y axis
     const roundedMinY = Math.ceil(minY);
     const roundedMaxY = Math.floor(maxY);
     const ySerifStep = Math.floor((roundedMaxY - roundedMinY) / 10);
@@ -81,6 +88,7 @@
     }
     context.stroke();
 
+    // drawing serifs for x axis
     const xSerifStep = Math.floor(data.length / 11);
 
     context.textAlign = 'center';
@@ -88,6 +96,7 @@
       context.fillText(dateFormat(data[i].t, 'mmm yyyy'), mapX(i * stepX), mapY(-20));
     }
 
+    //drawing graph
     context.beginPath();
     context.strokeStyle = '#096dd9';
 

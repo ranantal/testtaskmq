@@ -8,6 +8,11 @@
   import Input from './ui/Input.svelte';
   import Graph from './ui/Graph.svelte';
 
+  /**
+   * Checks for data in indexedDB, fetch data and add it ti indexedDB if there is no data in indexedDB
+   * @param table table name in indexedDB
+   * @param url url to fetch new data
+   */
   const loadData = (table: Table, url: string) =>
     getData<ItemData>(table)
       .then((data) => {
@@ -24,6 +29,9 @@
         return fetchData<ItemData>(url);
       });
 
+  /**
+   * data sources
+   */
   const temperature = loadData(Table.Temperature, '../data/temperature.json');
   const precipitation = loadData(Table.Precipitation, '../data/precipitation.json');
 
@@ -38,6 +46,9 @@
   let min = 1881;
   let max = 2006;
 
+  /**
+   * sets filter properties
+   */
   let onMaxChange = (event) => {
     if (event.detail < min) {
       max = min + 1;
@@ -56,6 +67,9 @@
     setData();
   };
 
+  /**
+   * create data source for graph
+   */
   let setData = (type: DataType = currentType) => {
     currentType = type;
     let source: Promise<ItemData[]>;
