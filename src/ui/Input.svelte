@@ -80,9 +80,11 @@
 
   input {
     box-sizing: border-box;
+    margin-right: -4px;
     height: 32px;
     padding-left: 16px;
     border: 1px solid var(--color-primary-7);
+    border-right: none;
     border-radius: 4px 0 0 4px;
 
     font-size: 14px;
