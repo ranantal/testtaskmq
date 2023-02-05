@@ -80,6 +80,7 @@
     context.textAlign = 'right';
     context.strokeStyle = '#DDD';
     context.beginPath();
+    // two cycles instead of one, because I wanna serif for zero axis to be rendered
     for (let i = 0; i < maxY; i += ySerifStep) {
       renderSerif(i);
     }
