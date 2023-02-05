@@ -50,27 +50,39 @@
    * sets filter properties
    */
   let onMaxChange = (event) => {
+    if (event.detail === max) {
+      return;
+    }
+
     if (event.detail < min) {
       max = min + 1;
     } else {
       max = event.detail;
     }
-    setData();
+    setData(currentType, true);
   };
 
   let onMinChange = (event) => {
+    if (event.detail === min) {
+      return;
+    }
+
     if (event.detail > max) {
       min = max - 1;
     } else {
       min = event.detail;
     }
-    setData();
+    setData(currentType, true);
   };
 
   /**
    * create data source for graph
    */
-  let setData = (type: DataType = currentType) => {
+  let setData = (type: DataType = currentType, force = false) => {
+    if (type === currentType && !force) {
+      return;
+    }
+
     currentType = type;
     let source: Promise<ItemData[]>;
 
