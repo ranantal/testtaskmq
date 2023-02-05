@@ -154,9 +154,12 @@
 
     const value = _data[valueIndex];
     // draw tooltp
-    tooltipsCtx.font = 'norrmal 12px Arial, sans-serif';
+    tooltipsCtx.font = 'normal 12px Arial, sans-serif';
     tooltipsCtx.textAlign = 'left';
-    tooltipsCtx.fillText(`${dateFormat(new Date(value.t), 'dd.mm.yyyy')}, ${value.v}`, 6, 16);
+    tooltipsCtx.fillStyle = 'black';
+    tooltipsCtx.fillText(`${dateFormat(new Date(value.t), 'dd.mm.yyyy')},`, 6, 16);
+    tooltipsCtx.fillStyle = 'red';
+    tooltipsCtx.fillText(`${value.v}`, 72, 16);
 
     // make tooltip visiible
     tooltips.style.zIndex = '1';
@@ -178,7 +181,7 @@
 
 <div bind:this={canvasContainer}>
   <canvas bind:this={canvas} on:mousemove={onMouseMove} on:mouseleave={clearTooltips} />
-  <canvas class="tooltips" bind:this={tooltips} width={100} height={25} />
+  <canvas class="tooltips" bind:this={tooltips} width={110} height={25} />
 </div>
 
 <style>
