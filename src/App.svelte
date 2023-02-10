@@ -10,8 +10,8 @@
 
   // store data in local variables to prevent multiple requests to indexedDB
   const dataSources: DataSources = {
-    [Table.Temperature]: null,
-    [Table.Precipitation]: null,
+    [Table.Temperature]: [],
+    [Table.Precipitation]: [],
   };
 
   const urls = {
@@ -50,6 +50,12 @@
       .catch((error) => {
         return fetchData<ItemData>(url);
       });
+
+  loadData(Table.Temperature, urls[Table.Temperature])
+    .then((data) => (dataSources[Table.Temperature] = data))
+    .then(() => setData(Table.Temperature, true));
+
+  loadData(Table.Precipitation, urls[Table.Precipitation]).then((data) => (dataSources[Table.Precipitation] = data));
 
   /**
    * sets filter properties
@@ -90,9 +96,9 @@
 
     currentType = type;
 
-    if (!dataSources[type]) {
-      dataSources[type] = await loadData(type, urls[type]);
-    }
+    // if (!dataSources[type]) {
+    //   dataSources[type] = await loadData(type, urls[type]);
+    // }
 
     data = dataSources[type].filter(({ t }) => {
       const year = Number(t.substring(0, 4));
@@ -100,7 +106,7 @@
     });
   };
 
-  setData(currentType, true);
+  // setData(currentType, true);
 </script>
 
 <main>
